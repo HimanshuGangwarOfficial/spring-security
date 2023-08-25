@@ -1,0 +1,21 @@
+
+	/**
+	 * Browser
+	 * http://localhost:8080/oauth2/authorize?response_type=code&client_id=oidc-client&scope=openid&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/oidc-client&code_challenge=NULL&code_challenge_method=S256
+	 * 
+	 * http://localhost:8080/oauth2/authorize?response_type=code&client_id=login-client&scope=openid&redirect_uri=https://springone.io/authorized&code_challenge=oITl2prrTUOfn-Kui71DgFxAp4X3P76tJvxAr6HToV8&code_challenge_method=S256
+	 * 
+	 * 
+	
+	**/
+	
+	/* Postman
+	curl --location 'login-client:openid-connect@localhost:8080/oauth2/token' \
+	--header 'Content-Type: application/x-www-form-urlencoded' \
+	--header 'Cookie: JSESSIONID=FEA334CB2353A5A619A87D167E819797' \
+	--data-urlencode 'redirect_uri=https://springone.io/authorized' \
+	--data-urlencode 'grant_type=authorization_code' \
+	--data-urlencode 'code=vtnnQ4lMA3ePJwvAhs93gicxaTmNI27C0zbVf8R8iNwejY_y7uQPwHY1IhZgqhPjsonWAnkkNjd_6-w65g4VT4ZW7d7FfJdbF4PhqwPPeXhh8P9CE7qAWXSjg3xu_8RM' \
+	--data-urlencode 'code_verifier=zawOy5c04q4XyePRDenLc96OupukC1XZ2pvRFkjxfREzimdDsPFHsqee7iJLg4k0SpVqFzkkrZAGltbf6JYiJfQs1XjrnG3d_d5y-4WqQDdg9c4F4L62gOZSbay-fGBB'
+	
+	*/
