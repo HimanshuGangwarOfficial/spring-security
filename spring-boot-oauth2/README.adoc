@@ -1,21 +1,83 @@
+# Running The App 
 
-	/**
-	 * Browser
-	 * http://localhost:8080/oauth2/authorize?response_type=code&client_id=oidc-client&scope=openid&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/oidc-client&code_challenge=NULL&code_challenge_method=S256
-	 * 
-	 * http://localhost:8080/oauth2/authorize?response_type=code&client_id=login-client&scope=openid&redirect_uri=https://springone.io/authorized&code_challenge=oITl2prrTUOfn-Kui71DgFxAp4X3P76tJvxAr6HToV8&code_challenge_method=S256
-	 * 
-	 * 
-	
-	**/
-	
-	/* Postman
-	curl --location 'login-client:openid-connect@localhost:8080/oauth2/token' \
+## 1. Client Credentials
+
+To run as a stand-alone application, do:
+```
+mvn clean verify
+```
+Or import the project into your IDE and run PaytmOauth2Application from there.
+
+Once it is up and running, you can issue the following request:
+```
+curl -X POST messaging-client:secret@localhost:8080/oauth2/token -d "grant_type=client_credentials" -d "scope=message:read"
+```
+This returns something like the following:
+```
+{
+    "access_token": "eyJraWQiOiI4YWY4Zjc2Zi0zMTdkLTQxZmYtYWY5Yi1hZjg5NDg4ODM5YzciLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJtZXNzYWdpbmctY2xpZW50IiwiYXVkIjoibWVzc2FnaW5nLWNsaWVudCIsIm5iZiI6MTYyNzMzNDQ1MCwic2NvcGUiOlsibWVzc2FnZTpyZWFkIl0sImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo5MDAwIiwiZXhwIjoxNjI3MzM0NzUwLCJpYXQiOjE2MjczMzQ0NTAsImp0aSI6IjBiYjYwZjhkLWIzNjItNDk0MC05MGRmLWZhZDg4N2Q1Yzg1ZSJ9.O8dI67B_feRjOn6pJi5ctPJmUJCNpV77SC4OiWqmpa5UHvf4Ud6L6EFe9LKuPIRrEWi8rMdCdMBOPKQMXvxLoI3LMUPf7Yj973uvZN0E988MsKwhGwxyaa_Wam8wFlk8aQlN8SbW3cKdeH-nKloNMdwjfspovefX521mxouaMjmyXdIFrM5WZ15GZK69NIniACSatE-pc9TAjKYBDbC65jVt_zHEvDQbEkZulF2bjrGOZC8C3IbJWnlKgkcshrY44TtrGPyCp2gIS0TSUUsG00iSBBC8E8zPU-YdfaP8gB9_FwUwK9zfy_hU2Ykf2aU3eulpGDVLn2rCwFeK86Rw1w",
+    "expires_in": 299,
+    "scope": "message:read",
+    "token_type": "Bearer"
+}
+```
+In order to make the same token introspection request as the tests, export the access token from the response:
+```
+export TOKEN=...
+```
+Which will return something like the following:
+```
+{
+    "active": true,
+    "aud": [
+        "messaging-client"
+    ],
+    "client_id": "messaging-client",
+    "exp": 1627334750,
+    "iat": 1627334450,
+    "iss": "http://localhost:9000",
+    "jti": "0bb60f8d-b362-4940-90df-fad887d5c85e",
+    "nbf": 1627334450,
+    "scope": "message:read",
+    "sub": "messaging-client",
+    "token_type": "Bearer"
+}
+```
+
+## 2. Authorization Code
+To run as a stand-alone application, do:
+```
+mvn clean verify
+```
+Or import the project into your IDE and run PaytmOauth2Application from there.
+
+Open the browser and hit the below URI:
+```
+http://localhost:8080/oauth2/authorize?response_type=code&client_id=login-client&scope=profile&redirect_uri=https://springone.io/authorized&code_challenge=oITl2prrTUOfn-Kui71DgFxAp4X3P76tJvxAr6HToV8&code_challenge_method=S256
+```
+You will be redirected to the Login page, enter the below credentials and hit login:
+```
+username: user
+password: password
+```
+After successfully login you will get the authorization code in the url. Take out that code and replace the code in below curl:
+```
+curl --location 'login-client:openid-connect@localhost:8080/oauth2/token' \
 	--header 'Content-Type: application/x-www-form-urlencoded' \
 	--header 'Cookie: JSESSIONID=FEA334CB2353A5A619A87D167E819797' \
 	--data-urlencode 'redirect_uri=https://springone.io/authorized' \
 	--data-urlencode 'grant_type=authorization_code' \
 	--data-urlencode 'code=vtnnQ4lMA3ePJwvAhs93gicxaTmNI27C0zbVf8R8iNwejY_y7uQPwHY1IhZgqhPjsonWAnkkNjd_6-w65g4VT4ZW7d7FfJdbF4PhqwPPeXhh8P9CE7qAWXSjg3xu_8RM' \
 	--data-urlencode 'code_verifier=zawOy5c04q4XyePRDenLc96OupukC1XZ2pvRFkjxfREzimdDsPFHsqee7iJLg4k0SpVqFzkkrZAGltbf6JYiJfQs1XjrnG3d_d5y-4WqQDdg9c4F4L62gOZSbay-fGBB'
-	
-	*/
+```
+
+which will return something like following:
+```
+{
+    "access_token": "eyJraWQiOiIyMjA2ODU5Yy0yMDc5LTQyODAtOWEzOS01NGY4ODNjOTM1NDAiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiYXVkIjoibG9naW4tY2xpZW50IiwibmJmIjoxNjkyOTM0NzI1LCJzY29wZSI6WyJwcm9maWxlIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImV4cCI6MTY5MjkzNTAyNSwiaWF0IjoxNjkyOTM0NzI1fQ.BnUV_ZzHEcC2c3uWnVuq--HG1SlgaNbst9TeoNMvYVlDAwhASLSA-kk0Fj0_ekWJTlQCh9Q7adLKWlShA_UdBMEOJgJJvS_c2jgCxPUbVw6V4PMqR19bEdGZ4nHGcKoGnl8NLDGUIwLN3VMR_-_li8ODekmXcO-V4ITCAvr72iYap1hDEuuspV6uBKfRqhUO65Ia7F7-ha_MkYFzRjmGcgIARQShhzrQC2lx7LkMRVNCCUBxWTiCmv2snIPUU2Maz3RvwCOrbCJpgqjExIAzkCps1HApbXB7PaeRTgg3RJ9ZP_QVcaN1ihQ8Kp6VFo9ilF-pf_6wxQQJ0nF1kfHsJw",
+    "refresh_token": "aRDN3QR1QfSHhwaNCJoM8L12d2WYk5dAbFwN9RRCYgXt_Jj0fe6I89cKU3e9j4feps21yKwqsvvsMB80-GUa09BOYumUgX44IGtnRxCqP2E5xbayeI4y-5Y_5ie6ew7Z",
+    "scope": "profile",
+    "token_type": "Bearer",
+    "expires_in": 299
+}
+```
