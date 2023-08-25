@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">
+
+	<bean id="passwordEncoder"
+		class="org.springframework.security.crypto.password.NoOpPasswordEncoder" />
+		
+	<security:http>
+		<security:http-basic />
+		<security:csrf disabled="true" />
+
+		<security:intercept-url pattern="/home.htm"
+			access="permitAll" />
+		<security:intercept-url pattern="/account.htm"
+			access="isAuthenticated()" />
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:password-encoder
+				ref="passwordEncoder" />
+			<security:user-service>
+				<security:user name="joe" password="welcome1"
+					authorities="customer" />
+				<security:user name="bob" password="welcome2"
+					authorities="clerk" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+
+</beans>
